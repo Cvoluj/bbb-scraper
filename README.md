@@ -1,10 +1,7 @@
-# scrapy-boilerplate
+# bbb-scraper
+This project uses [scrapy-boilerplate](https://github.com/groupbwt/scrapy-boilerplate) template
 
-This is a boilerplate for new Scrapy projects.
-
-*The project is a WIP, so expect major changes and additions (mostly latter).
-Master branch is to be considered as always ready to use, with major changes/features introduced in feature branches.*
-
+Scraping [bbb](https://www.bbb.org/)
 ## Features
 
 - Python 3.11+
