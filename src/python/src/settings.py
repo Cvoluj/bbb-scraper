@@ -17,6 +17,7 @@ NEWSPIDER_MODULE = "spiders"
 COMMANDS_MODULE = "commands"
 
 PROXY = os.getenv("PROXY", "")
+
 PROXY_AUTH = os.getenv("PROXY_AUTH", "")
 PROXY_ENABLED = strtobool(os.getenv("PROXY_ENABLED", "False"))
 
@@ -25,6 +26,7 @@ USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTM
 
 CONCURRENT_REQUESTS = int(os.getenv("CONCURRENT_REQUESTS", "16"))
 CONCURRENT_REQUESTS_PER_DOMAIN = int(os.getenv("CONCURRENT_REQUESTS_PER_DOMAIN", "8"))
+
 DOWNLOAD_DELAY = int(os.getenv("DOWNLOAD_DELAY", "0"))
 DOWNLOAD_TIMEOUT = int(os.getenv("DOWNLOAD_TIMEOUT", "180"))
 
@@ -47,13 +49,16 @@ DOWNLOADER_MIDDLEWARES = {
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
 LOG_FILE = os.getenv("LOG_FILE") if os.getenv("LOG_FILE", "") else None
 
-ITEM_PIPELINES: Dict[str, int] = {}
+ITEM_PIPELINES: Dict[str, int] = {
+    'pipelines.sitemap_db_pipeline.UrlDatabasePipeline': 300,
+}
 
 DB_HOST = os.getenv("DB_HOST", "127.0.0.1")
 DB_PORT = int(os.getenv("DB_PORT", "3306"))
 DB_USERNAME = os.getenv("DB_USERNAME", "root")
 DB_PASSWORD = os.getenv("DB_PASSWORD", "")
 DB_DATABASE = os.getenv("DB_DATABASE", "db_name")
+
 
 PIKA_LOG_LEVEL = os.getenv("PIKA_LOG_LEVEL", "WARN")
 logging.getLogger("pika").setLevel(PIKA_LOG_LEVEL)
