@@ -57,7 +57,7 @@ class ItemProducerPipeline:
 
         """Declare/retrieve queue name from spider instance"""
         result_queue_name = spider.result_queue_name
-
+        
         """Build pika connection parameters and start connection in separate twisted thread"""
         parameters = pika.ConnectionParameters(
             host=self.spider.settings.get("RABBITMQ_HOST"),

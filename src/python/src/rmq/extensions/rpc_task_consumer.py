@@ -258,6 +258,7 @@ class RPCTaskConsumer(object):
             spider = self.__spider
         if delivery_tag is not None and spider is not None:
             current_task = spider.processing_tasks.get_task(delivery_tag)
+            logger.warning(current_task)
             if (
                 not current_task
                 and self.completion_strategy
@@ -289,7 +290,7 @@ class RPCTaskConsumer(object):
                 if (
                     self.completion_strategy
                     == RPCTaskConsumer.CompletionStrategies.WEAK_ITEMS_BASED
-                ):
+                ):  
                     is_completed = current_task.is_items_completed()
                 if (
                     self.completion_strategy
@@ -342,7 +343,8 @@ class RPCTaskConsumer(object):
 
                 if hasattr(spider, "processing_tasks") and isinstance(
                     spider.processing_tasks, TaskObserver
-                ):
+                ):  
+                    logger.warning(f'Task removed {delivery_tag}')
                     spider.processing_tasks.remove_task(delivery_tag)
 
     def _validate_spider_has_attributes(self):

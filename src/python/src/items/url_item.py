@@ -1,4 +1,4 @@
 import scrapy
 
-class UrlsItem(scrapy.Item):
+class UrlItem(scrapy.Item):
     url = scrapy.Field()

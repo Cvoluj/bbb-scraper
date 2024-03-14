@@ -1,13 +1,12 @@
 from database.models.base import Base
-from database.models.mixins import MysqlPrimaryKeyMixin, MysqlStatusMixin
-from sqlalchemy import String, Column, Enum
-from sqlalchemy.dialects.mysql import ENUM
-from rmq.utils import TaskStatusCodes
+from database.models.mixins import MysqlPrimaryKeyMixin, MysqlStatusMixin, MysqlExceptionMixin
+from sqlalchemy import String, Column
 
-class Url(Base, MysqlPrimaryKeyMixin, MysqlStatusMixin):
+
+class Url(Base, MysqlPrimaryKeyMixin, MysqlStatusMixin, MysqlExceptionMixin):
     __tablename__ = 'urls'
 
-    url = Column(String(768), nullable=False)
+    url = Column(String(768), nullable=False, unique=True)
 
     def __repr__(self) -> str:
         return f'{self.url}'
