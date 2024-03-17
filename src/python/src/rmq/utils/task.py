@@ -1,4 +1,5 @@
 import json
+import logging
 
 from rmq.exceptions import ConsumedDataCorrupted
 
@@ -88,6 +89,8 @@ class Task:
     def is_items_completed(self, ignore_zero=True):
         if ignore_zero is True and self.scheduled_items == 0:
             return False
+        res = self.scraped_items + self.dropped_items + self.error_items
+        logging.warning(f'{res} and {self.scheduled_items}')
         return self.scheduled_items == (self.scraped_items + self.dropped_items + self.error_items)
 
     def is_requests_completed(self, ignore_zero=True):

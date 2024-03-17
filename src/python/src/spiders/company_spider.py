@@ -14,12 +14,15 @@ from items import CompanyItem
 from middlewares.retry_request_middleware import RetryRequestMiddleware
 
 
-
 class CompanySpider(TaskToSingleResultSpider):
     name = "company"
 
     custom_settings = {"ITEM_PIPELINES": {get_import_full_name(ItemProducerPipeline): 310,},
-                    #    "DOWNLOADER_MIDDLEWARES": {get_import_full_name(RetryRequestMiddleware): 543,}
+                       "DOWNLOADER_MIDDLEWARES": 
+                            {
+                            get_import_full_name(RetryRequestMiddleware): 560,
+                            "middlewares.HttpProxyMiddleware": 543,
+                            }
                        }
     
     def __init__(self, *args, **kwargs):
@@ -31,14 +34,11 @@ class CompanySpider(TaskToSingleResultSpider):
 
     def next_request(self, delivery_tag, message):
         url = json.loads(message)['url']
-        return Request(url, callback=self.parse, meta={'delivery_tag': delivery_tag, 'reply_to': 'replies_queue'}, errback=self.handle_error)
+        return Request(url, callback=self.parse, meta={'delivery_tag': delivery_tag}, errback=self.handle_error)
 
     @rmq_callback
     def parse(self, response: Response):
         item = CompanyItem()
-
-        
-        self.logger.warning(self.processing_tasks.current_processing_count())
         
         item['url'] = response.url
         item['business_id'] = item['url'].split('/')[-1]
@@ -63,7 +63,8 @@ class CompanySpider(TaskToSingleResultSpider):
         elif '.org/ca/' in item['url']:
             item['country'] = 'Canada'
         else:
-            self.logger.error(f"Can't parse country {item['url']}")
+            self.logger.warning(f"Can't parse country from URL: {item['url']}")
+            # raise ValueError(f"Can't parse country from URL: {item['url']}")
 
         item['years_old'] = response.xpath('//p[@class="bds-body"]/strong[text()="Years in Business:"]/following-sibling::text()[1]').get()
         item['years_old'] = int(item['years_old'].strip()) if item['years_old'] else None
@@ -118,26 +119,19 @@ class CompanySpider(TaskToSingleResultSpider):
                     item[date_str] = datetime.strptime(date_item, '%m/%d/%Y').isoformat()
 
         yield item
-        self.logger.warning(item)
 
     @rmq_errback
     def handle_error(self, failure: Failure):
-        self.logger.warning(f'{failure.value.response.status}')
         if failure.check(TunnelError):
             self.logger.info("TunnelError. Copy request")
             yield failure.request.copy()
-        delivery_tag = failure.request.meta['delivery_tag']
-        self.processing_tasks.set_status(delivery_tag=delivery_tag, status=TaskStatusCodes.ERROR.value)
+        else:
+            self.logger.warning(f"IN ERRBACK: {repr(failure)}")
+        # delivery_tag = failure.request.meta['delivery_tag']
+        # self.processing_tasks.set_status(delivery_tag=delivery_tag, status=TaskStatusCodes.ERROR.value)
         
-        task: Task = self.processing_tasks.get_task(delivery_tag=delivery_tag)
+        # task: Task = self.processing_tasks.get_task(delivery_tag=delivery_tag)
 
-        if failure.value.response.status in (404, ):
-            self.logger.warning(f'{task.payload}')
-            task.ack()
-        # elif failure.value.response.status in (403, 429):
-        #     self.logger.warning('403 or 429, retry')
-        #     yield failure.request.copy()
-        # else:
+        # if failure.value.response.status in (404, ):
+        #     self.logger.warning(f'{task.payload}')
         #     task.ack()
-        #     self.processing_tasks.remove_task(delivery_tag=delivery_tag)
-        #     self.logger.warning(f"IN ERRBACK: {repr(failure)}")

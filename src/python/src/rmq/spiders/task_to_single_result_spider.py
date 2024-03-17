@@ -10,4 +10,4 @@ class TaskToSingleResultSpider(TaskBaseSpider):
     def __init__(self, *args, **kwargs):
         super(TaskToSingleResultSpider, self).__init__(*args, **kwargs)
         self.processing_tasks = TaskObserver()
-        self.completion_strategy = RPCTaskConsumer.CompletionStrategies.WEAK_ITEMS_BASED
+        self.completion_strategy = RPCTaskConsumer.CompletionStrategies.REQUESTS_BASED

@@ -11,7 +11,6 @@ from twisted.internet import reactor
 class CompanyDatabasePipeline():
 
     def open_spider(self, spider):
-        print('JASHDJHAJSDHJASHJDHJ')
         self.conn = get_db()
 
     @defer.inlineCallbacks

@@ -7,7 +7,7 @@ from database.models import Url
 from commands.base import BaseCommand
 
 
-class ConsumeUrlFromQueue(BaseCommand, Consumer):
+class ConsumeUrlFromQueue(Consumer):
     def init(self):
         pass
 
@@ -27,7 +27,6 @@ class ConsumeUrlFromQueue(BaseCommand, Consumer):
         }).values(message_body)
         return stmt
         """
-        message_body['status'] = TaskStatusCodes.SUCCESS.value
         stmt: Insert = insert(Url)
         stmt = stmt.on_duplicate_key_update({
             'status': stmt.inserted.status

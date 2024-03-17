@@ -6,7 +6,7 @@ from database.models import Company
 from commands.base import BaseCommand
 
 
-class ConsumeUrlFromQueue(Consumer, BaseCommand):
+class ConsumeUrlFromQueue(Consumer):
     def init(self):
         pass
 

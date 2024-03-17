@@ -5,7 +5,7 @@ from sqlalchemy import select, update
 from database.models import Url
 from commands.base import BaseCommand
 
-class ProduceUrlToQueue(BaseCommand, Producer):
+class ProduceUrlToQueue(Producer):
     def init(self):
         pass
 

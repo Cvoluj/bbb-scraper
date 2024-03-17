@@ -47,6 +47,7 @@ def upgrade():
     sa.Column('contact', sa.JSON(), nullable=True),
     sa.Column('created_at', mysql.TIMESTAMP(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
     sa.Column('updated_at', mysql.TIMESTAMP(), server_default=sa.text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'), nullable=False),
+    sa.Column('sent_to_customer', mysql.TIMESTAMP(), server_default=None, nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('business_id')
     )

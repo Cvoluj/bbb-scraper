@@ -25,7 +25,6 @@ USER_AGENT_RELEASE_DATE = '2021-11-01'
 USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36"
 
 CONCURRENT_REQUESTS = int(os.getenv("CONCURRENT_REQUESTS", "16"))
-# CONCURRENT_REQUESTS = 16
 CONCURRENT_REQUESTS_PER_DOMAIN = int(os.getenv("CONCURRENT_REQUESTS_PER_DOMAIN", "8"))
 
 DOWNLOAD_DELAY = int(os.getenv("DOWNLOAD_DELAY", "0"))
@@ -47,17 +46,11 @@ DOWNLOADER_MIDDLEWARES = {
     "middlewares.HttpProxyMiddleware": 543,
 }
 
-RETRY_HTTP_CODES = [500, 502, 503, 504, 522, 524, 408, 429, 400, 403, 429]
-RETRY_TIMES = 2
-# RETRY_ENABLED = False
-
-# LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
-LOG_LEVEL = 'DEBUG'
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
 LOG_FILE = os.getenv("LOG_FILE") if os.getenv("LOG_FILE", "") else None
 
 ITEM_PIPELINES: Dict[str, int] = {
-    # 'pipelines.sitemap_db_pipeline.UrlDatabasePipeline': 300,
-    # 'rmq.pipelines.item_producer_pipeline.ItemProducerPipeline': 400,
+
 }
 
 DB_HOST = os.getenv("DB_HOST", "127.0.0.1")

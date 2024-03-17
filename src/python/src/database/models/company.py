@@ -33,6 +33,7 @@ class Company(Base, MysqlPrimaryKeyMixin, MysqlTimestampsMixin):
     twitter = Column(String(str_768), nullable=True)
     management = Column(JSON, nullable=True)
     contact = Column(JSON, nullable=True)
+    sent_to_customer = Column("sent_to_customer", TIMESTAMP, nullable=True, server_default=None)
 
 
     def __repr__(self) -> str:
