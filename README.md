@@ -19,33 +19,14 @@ Scrap bbb guide
 
 1. Clone the repository.
 2. `cp .env.example .env`
-3. `docker compose up -d database python rmq`
-3. `docker compose exec python bash`
-4. `cd /var/app/python/src/`
-5. `poetry shell`
-Scrap sitemaps (url that we will scrap in RPC spider)
-6. scrapy crawl sitemap
-7. pm2 start pm2.config.js
-8. scrapy export_csv
-
-### Python Quickstart Guide
-To create and run a new Scrapy project using this boilerplate, you need to:
-
-1. Clone the repository.
-2. `cp .env.example .env`
-3. No docker:
-   1. Have the following prerequisites: python 3.11+, poetry, mysqlclient libraries, etc
-   2. `cd src/python/src`
-   3. `poetry install`
-   4. `poetry shell`
-   5. `scrapy`
-4. Docker:
-   1. Have the following prerequisites: docker, docker-compose
-   2. `docker compose up -d database python`
-   3. `docker compose exec python bash`
-   4. `cd /var/app/python/src/`
-   5. `poetry shell`
-   6. `scrapy`
+3. `docker compose up -d rabbitmq`
+3. `cd src/python/src`
+4. `scrapy crawl sitemap`
+5. `cd pm2/`
+6. `pm2 start pm2.config.js`
+7. `pm2 kill`
+8. `cd ..`
+9. `scrapy export_csv`
 
 ### Docker
 
