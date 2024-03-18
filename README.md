@@ -23,12 +23,14 @@ Scrap bbb guide
 4. `poetry install`
 5. `poetry shell`
 6. `docker compose up -d rabbitmq`
-7. `scrapy crawl sitemap`
-8. `cd pm2/`
-9. `pm2 start pm2.config.js`
-10. `pm2 kill`
-11. `cd ..`
-12. `scrapy export_csv`
+7. `alembic upgrade +1`
+8. `alembic upgrade +1`
+9. `scrapy crawl sitemap`
+10. `cd pm2/`
+11. `pm2 start pm2.config.js`
+11. `pm2 kill`
+12. `cd ..`
+13. `scrapy export_csv`
 
 ### Docker
 
