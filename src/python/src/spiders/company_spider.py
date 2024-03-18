@@ -52,7 +52,7 @@ class CompanySpider(TaskToSingleResultSpider):
         address_partiotions = response.xpath('//div[contains(@class, "dtm-address")]/div/address/p/text()').getall()
         if address_partiotions:
             item['city'], _, item['state'], _, item['postal_code'] = address_partiotions[-5:]
-            item['address'] = f'{item['city']}, {item['state']} {item['postal_code']}'
+            item['address'] = f"{item['city']}, {item['state']} {item['postal_code']}"
 
             if len(address_partiotions) > 5:
                 item['street'] = ' '.join(address_partiotions[:-5]) if ' '.join(address_partiotions[:-5]) != ' ' else None
@@ -62,9 +62,6 @@ class CompanySpider(TaskToSingleResultSpider):
             item['country'] = 'USA'
         elif '.org/ca/' in item['url']:
             item['country'] = 'Canada'
-        else:
-            self.logger.warning(f"Can't parse country from URL: {item['url']}")
-            # raise ValueError(f"Can't parse country from URL: {item['url']}")
 
         item['years_old'] = response.xpath('//p[@class="bds-body"]/strong[text()="Years in Business:"]/following-sibling::text()[1]').get()
         item['years_old'] = int(item['years_old'].strip()) if item['years_old'] else None
@@ -75,17 +72,17 @@ class CompanySpider(TaskToSingleResultSpider):
         item['user_score'] = item['user_score'].split('/')[0] if item['user_score'] else None
         item['accredited_score'] = ''.join(response.xpath("//span[contains(@class, 'dtm-rating')]//span/text()").getall()).replace('BBB rating', '')
 
-        yield Request(url=f'{item['url']}/details', callback=self.parse_detail, meta={'item': item})
+        yield Request(url=f"{item['url']}/details", callback=self.parse_detail, meta={'item': item}, errback=self.handle_error)
 
     @rmq_callback
     def parse_detail(self, response: Response):
-        foundation_date = response.xpath('//dt[text()="Business Started:"]/following-sibling::dd[1]/text()').get()
         item = response.meta['item']
         item['image_url'] = response.xpath('//div[@class="repel css-7ta29z eynu2dr1"]//img/@src').get()
         if item['image_url'] == 'https://m.bbb.org/terminuscontent/dist/img/non-ab-icon__300w.png?tx=w_120':
             item['image_url'] = None
 
         
+        foundation_date = response.xpath('//dt[text()="Business Started:"]/following-sibling::dd[1]/text()').get()
         item['foundation_date'] = foundation_date.strip() if foundation_date else None
         accredited_date = response.xpath("//div/p/strong[text()='Accredited Since:']/following-sibling::text()[1]").get()
         item['accredited_date'] = accredited_date.strip() if accredited_date else None
@@ -127,11 +124,3 @@ class CompanySpider(TaskToSingleResultSpider):
             yield failure.request.copy()
         else:
             self.logger.warning(f"IN ERRBACK: {repr(failure)}")
-        # delivery_tag = failure.request.meta['delivery_tag']
-        # self.processing_tasks.set_status(delivery_tag=delivery_tag, status=TaskStatusCodes.ERROR.value)
-        
-        # task: Task = self.processing_tasks.get_task(delivery_tag=delivery_tag)
-
-        # if failure.value.response.status in (404, ):
-        #     self.logger.warning(f'{task.payload}')
-        #     task.ack()

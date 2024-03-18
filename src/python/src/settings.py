@@ -52,6 +52,7 @@ LOG_FILE = os.getenv("LOG_FILE") if os.getenv("LOG_FILE", "") else None
 ITEM_PIPELINES: Dict[str, int] = {
 
 }
+RETRY_HTTP_CODES = []
 
 DB_HOST = os.getenv("DB_HOST", "127.0.0.1")
 DB_PORT = int(os.getenv("DB_PORT", "3306"))

@@ -9,8 +9,8 @@ from middlewares import HttpProxyMiddleware
 class RetryRequestMiddleware(RetryMiddleware):
     custom_setting = {
         "RETRY_ENABLED": True,
-        "RETRY_HTTP_CODES": [500, 502, 503, 504, 522, 524, 408, 429, 403],
-        "RETRY_TIMES": 20
+        "RETRY_HTTP_CODES": [502, 503, 504, 522, 524, 408, 429, 403],
+        "RETRY_TIMES": 5
     }
 
     def __init__(self, settings):
@@ -34,8 +34,7 @@ class RetryRequestMiddleware(RetryMiddleware):
         if reason != '403 Forbidden':
             return super()._retry(request, reason, spider)
         
-        logging.info('PROXY UPDATED, REQUEST AGAIN')
-        request = HttpProxyMiddleware.update_request(request, spider)
+        request.headers["Connection"] = "close"
         try:
             return get_retry_request(request=request, 
                                  spider=spider, 
