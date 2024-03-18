@@ -154,7 +154,7 @@ class RPCTaskConsumer(object):
         self._check_is_completed(spider, delivery_tag)
 
     def on_errback_completed(self, failure=None, spider=None, delivery_tag=None):
-        if failure is not None and spider is not None:
+        if failure is not None and spider is not None:          
             delivery_tag = (
                 failure.request.meta.get(self.delivery_tag_meta_key, None)
                 if delivery_tag is None
@@ -273,23 +273,23 @@ class RPCTaskConsumer(object):
                             current_task.success_responses == 0
                             and current_task.scheduled_requests > 0
                             and current_task.scheduled_requests == current_task.failed_responses
-                        ):
+                        ):  
                             current_task.status = TaskStatusCodes.HARDWARE_ERROR
                         elif (
                             current_task.scheduled_requests > 0
                             and current_task.failed_responses == 0
-                        ):
+                        ):  
                             current_task.status = TaskStatusCodes.SUCCESS
                         else:
                             current_task.status = TaskStatusCodes.PARTIAL_SUCCESS
             elif self.completion_strategy in [
                 RPCTaskConsumer.CompletionStrategies.STRONG_ITEMS_BASED,
                 RPCTaskConsumer.CompletionStrategies.WEAK_ITEMS_BASED,
-            ]:
+            ]:  
                 if (
                     self.completion_strategy
                     == RPCTaskConsumer.CompletionStrategies.WEAK_ITEMS_BASED
-                ):
+                ):  
                     is_completed = current_task.is_items_completed()
                 if (
                     self.completion_strategy
@@ -342,7 +342,7 @@ class RPCTaskConsumer(object):
 
                 if hasattr(spider, "processing_tasks") and isinstance(
                     spider.processing_tasks, TaskObserver
-                ):
+                ):  
                     spider.processing_tasks.remove_task(delivery_tag)
 
     def _validate_spider_has_attributes(self):
@@ -450,8 +450,6 @@ class RPCTaskConsumer(object):
             )
         rmq_task = Task(message, ack_cb, nack_cb)
         self.__spider.processing_tasks.add_task(rmq_task)
-        # logger.debug(message["body"])
-        # logger.critical(message)
         self._can_get_next_message = True
         spider_next_request = getattr(self.__spider, "next_request", None)
         if callable(spider_next_request):

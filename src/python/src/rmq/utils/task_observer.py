@@ -1,9 +1,10 @@
 from .task import Task
+from typing import Dict, Any
 
 
 class TaskObserver:
     def __init__(self):
-        self.__tasks = {}
+        self.__tasks: Dict[Any, Task] = {}
 
     def add_task(self, task: Task):
         delivery_tag = task.delivery_tag
