@@ -14,7 +14,7 @@ const spiders = [
   {
     name: `${PROJECT_PREFIX}_spider`,
     script: SCRAPY_SCRIPT,
-    args: "crawl spider_name",
+    args: "crawl company",
     interpreter: PYTHON_INTERPRETER,
     instances: 1,
     autorestart: true,
@@ -31,9 +31,38 @@ const spiders = [
   }
 ];
 
-const producers = [];
+const producers = [
+  {
+  name: `${PROJECT_PREFIX}_produce_url`,
+  script: SCRAPY_SCRIPT,
+  args: "consume_url --task_queue=task --reply_to_queue=reply --chunk_size=500 --mode=worker",
+  interpreter: PYTHON_INTERPRETER,
+  instances: 1,
+  autorestart: true,
+  cron_restart: "0 * * * *",
+  }
+];
 
-const consumers = [];
+const consumers = [
+  {
+  name: `${PROJECT_PREFIX}_consume_url`,
+  script: SCRAPY_SCRIPT,
+  args: "consume_url --queue=reply --mode=worker",
+  interpreter: PYTHON_INTERPRETER,
+  instances: 1,
+  autorestart: true,
+  cron_restart: "0 * * * *",
+  },
+  {
+  name: `${PROJECT_PREFIX}_consume_url`,
+  script: SCRAPY_SCRIPT,
+  args: "consume_url --queue=result --mode=worker",
+  interpreter: PYTHON_INTERPRETER,
+  instances: 1,
+  autorestart: true,
+  cron_restart: "0 * * * *",
+  }
+];
 
 const commands = [
   {
