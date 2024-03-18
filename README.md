@@ -19,10 +19,10 @@ Scrap bbb guide
 
 1. Clone the repository.
 2. `cp .env.example .env`
-3. `poetry install`
-4. `poetry shell`
-5. `docker compose up -d rabbitmq`
-6. `cd src/python/src`
+3. `cd src/python/src`
+4. `poetry install`
+5. `poetry shell`
+6. `docker compose up -d rabbitmq`
 7. `scrapy crawl sitemap`
 8. `cd pm2/`
 9. `pm2 start pm2.config.js`
