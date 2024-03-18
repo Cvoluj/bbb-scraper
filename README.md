@@ -27,10 +27,11 @@ Scrap bbb guide
 8. `alembic upgrade +1`
 9. `scrapy crawl sitemap`
 10. `cd pm2/`
-11. `pm2 start pm2.config.js`
-11. `pm2 kill`
-12. `cd ..`
-13. `scrapy export_csv`
+11. `cp .\pm2.config.example.js pm2.config.js`
+12. `pm2 start pm2.config.js`
+13. `pm2 kill`
+14. `cd ..`
+15. `scrapy export_csv`
 
 ### Docker
 
