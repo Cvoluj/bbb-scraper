@@ -19,15 +19,6 @@ const spiders = [
     instances: 1,
     autorestart: true,
     cron_restart: "0 * * * *",
-  },
-  {
-    name: `${PROJECT_PREFIX}_puppeteer_spider`,
-    script: NODEJS_SCRIPT,
-    cwd: TYPESCRIPT_CWD,
-    args: `build/index.js crawl example --url="https://api.myip.com/"`,
-    instances: 1,
-    autorestart: true,
-    cron_restart: "0 * * * *",
   }
 ];
 
@@ -35,7 +26,7 @@ const producers = [
   {
   name: `${PROJECT_PREFIX}_produce_url`,
   script: SCRAPY_SCRIPT,
-  args: "consume_url --task_queue=task --reply_to_queue=reply --chunk_size=500 --mode=worker",
+  args: "produce_url --task_queue=task --reply_to_queue=reply --chunk_size=500 --mode=worker",
   interpreter: PYTHON_INTERPRETER,
   instances: 1,
   autorestart: true,
@@ -54,9 +45,9 @@ const consumers = [
   cron_restart: "0 * * * *",
   },
   {
-  name: `${PROJECT_PREFIX}_consume_url`,
+  name: `${PROJECT_PREFIX}_consume_company`,
   script: SCRAPY_SCRIPT,
-  args: "consume_url --queue=result --mode=worker",
+  args: "consume_company --queue=result --mode=worker",
   interpreter: PYTHON_INTERPRETER,
   instances: 1,
   autorestart: true,
@@ -64,17 +55,7 @@ const consumers = [
   }
 ];
 
-const commands = [
-  {
-    name: `${PROJECT_PREFIX}_command_name`,
-    script: SCRAPY_SCRIPT,
-    args: "scrapy_command_name --args1=123 --args2=text",
-    interpreter: PYTHON_INTERPRETER,
-    instances: 1,
-    autorestart: true,
-    cron_restart: "0 * * * *",
-  },
-];
+const commands = [];
 
 const processNames = [];
 const apps = [];
